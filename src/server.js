@@ -1,31 +1,39 @@
+/* eslint-disable no-console */
 import express from 'express';
-import { mapOrder } from '~/utils/sorts.js';
+import { CONECT_DB, GET_DB } from '~/config/mongodb';
 
-const app = express();
+const START_SERVER = () => {
+  const app = express();
+  const hostname = 'localhost';
+  const port = 8017;
+  app.get('/', async (req, res) => {
+    console.log(await GET_DB().listCollections().toArray());
+    res.end('<h1>Hello World!</h1><hr>');
+  });
 
-const hostname = 'localhost';
-const port = 8017;
+  app.listen(port, hostname, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Hello , I am running at ${hostname}:${port}/`);
+  });
+};
 
-app.get('/', (req, res) => {
-  // Test Absolute import mapOrder
-  // eslint-disable-next-line no-console
-  console.log(
-    mapOrder(
-      [
-        { id: 'id-1', name: 'One' },
-        { id: 'id-2', name: 'Two' },
-        { id: 'id-3', name: 'Three' },
-        { id: 'id-4', name: 'Four' },
-        { id: 'id-5', name: 'Five' },
-      ],
-      ['id-5', 'id-4', 'id-2', 'id-3', 'id-1'],
-      'id'
-    )
-  );
-  res.end('<h1>Hello World!</h1><hr>');
-});
+(async () => {
+  try {
+    console.log('1.Connecting to Mongodb');
+    await CONECT_DB();
+    console.log('2.Connecting to Mongodb');
+    // khởi động Server BE sau khi kết nối vs DB
+    START_SERVER();
+  } catch (error) {
+    console.log(error);
+    process.exit(0);
+  }
+})();
 
-app.listen(port, hostname, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Hello , I am running at ${hostname}:${port}/`);
-});
+// CONECT_DB()
+//   .then(() => console.log('Đã connect'))
+//   .then(() => START_SERVER())
+//   .catch((error) => {
+//     console.log(error);
+//     process.exit(0);
+//   });
