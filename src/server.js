@@ -3,13 +3,20 @@ import express from 'express';
 import exitsHook from 'async-exit-hook';
 import { CONECT_DB, CLOSE_DB } from '~/config/mongodb';
 import { env } from '~/config/environment';
+import { APIs_V1 } from '~/routes/v1';
+import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware';
 
 const START_SERVER = () => {
   const app = express();
 
-  app.get('/', async (req, res) => {
-    res.end('<h1>Hello World!</h1><hr>');
-  });
+  //bật request json body data
+  app.use(express.json());
+
+  // sử dụng api v1
+  app.use('/v1', APIs_V1);
+
+  //middleware xữ lý lỗi tập trung
+  app.use(errorHandlingMiddleware);
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     // eslint-disable-next-line no-console
