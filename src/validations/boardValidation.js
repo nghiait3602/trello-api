@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { StatusCodes } from 'http-status-codes';
+import ApiError from '~/utils/ApiError';
 
 const createNew = async (req, res, next) => {
   const correctCodition = Joi.object({
@@ -15,20 +16,14 @@ const createNew = async (req, res, next) => {
   });
 
   try {
-    // console.log(req.body);
-
     // set abortEarly: false chỉ định, trường hợp có nhiều lỗi validation thì trả về tất cả lỗi
     await correctCodition.validateAsync(req.body, { abortEarly: false });
-    // next();
-    res
-      .status(StatusCodes.CREATED)
-      .json({ message: 'POS from Validation: API create new boards' });
+    // validate dữ liệu hợp lệ cho request đi tếp đến controller
+    next();
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
-      errors: new Error(error).message,
-    });
+    next(
+      new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message)
+    );
   }
 };
 
