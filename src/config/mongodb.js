@@ -1,13 +1,10 @@
-const MONGODB_URI =
-  'mongodb+srv://ntrungnghiajob-trello:jyrmqScvl9WLJGzi@cluster-trungnghai.trl2h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-TrungNghai';
-const NAME_DB = 'trello-db';
-
 import { MongoClient, ServerApiVersion } from 'mongodb';
+import { env } from '~/config/environment';
 
 let trelloDatabaseInstance = null;
 
 // tạo đối tương connect tới mongodb
-const mongoClientInstace = new MongoClient(MONGODB_URI, {
+const mongoClientInstace = new MongoClient(env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -18,9 +15,13 @@ const mongoClientInstace = new MongoClient(MONGODB_URI, {
 // kết nối vs database
 export const CONECT_DB = async () => {
   await mongoClientInstace.connect();
-
   //   kết nối thành công thì lấy database gán ngược lại vào biến trelloDatabaseInstance
-  trelloDatabaseInstance = mongoClientInstace.db(NAME_DB);
+  trelloDatabaseInstance = mongoClientInstace.db(env.DATABASE_NAME);
+};
+
+// đóng kết nối đến db khi cần
+export const CLOSE_DB = async () => {
+  await mongoClientInstace.close();
 };
 
 // nhiệm vụ là để export Trello Database Instance sau khi đã connect đến database
