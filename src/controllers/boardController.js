@@ -5,11 +5,9 @@ import { boarService } from '~/services/boardService';
 
 const createNew = async (req, res, next) => {
   try {
-    console.log(req.body);
-
-    // điều hướng dữ liệu sang services
+    // điều hướng dữ liệu sang services để xữ lý logic
     const createBoard = await boarService.createNew(req.body);
-
+    console.log(createBoard);
     //Có kết quả thì trả về phía client
     res.status(StatusCodes.CREATED).json(createBoard);
   } catch (error) {
