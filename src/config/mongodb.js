@@ -3,7 +3,7 @@ import { env } from '~/config/environment';
 
 let trelloDatabaseInstance = null;
 
-// tạo đối tương connect tới mongodb
+// tạo đối tương connect tới mongodb ->  doc mongodbco
 const mongoClientInstace = new MongoClient(env.MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,

@@ -44,11 +44,3 @@ const START_SERVER = () => {
     process.exit(0);
   }
 })();
-
-// CONECT_DB()
-//   .then(() => console.log('Đã connect'))
-//   .then(() => START_SERVER())
-//   .catch((error) => {
-//     console.log(error);
-//     process.exit(0);
-//   });
